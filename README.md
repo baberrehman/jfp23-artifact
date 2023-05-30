@@ -49,7 +49,7 @@ switches is at least as expressive as original Dunfield's system.
 
 We provide two alternatives for building the artifact:
 
-1. Build from scratch
+1. Build From Scratch
 2. Docker Image
 
 ### 1) Build From Scratch
