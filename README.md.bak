@@ -24,7 +24,7 @@ The Coq formalization can be found in the folder `coq`. Description of each file
 
 
 
-Correspondence of important lemmas in paper and in artifact is:
+Correspondance of important lemmas in paper and in artifact is:
 
 
 |  Lemma in Paper  |   Coq file    |     Lemma(s) in Coq File     |
@@ -51,7 +51,8 @@ switches is at least as expressive as original Dunfield's system.
 
 Artifact is compiled with **Coq version 8.13.2**. We recommend the same for the
 sake of consistency. Detailed instructions of installing `Coq` are available
-at: `https://coq.inria.fr/opam-using.html`.
+at: `https://coq.inria.fr/opam-using.html`. Opam installation makes switching
+version easier.
 
 Artifact also depends on an external library **Metalib**. Detailed installation
 instructions of Metalib are available at: `https://github.com/plclub/metalib`.
