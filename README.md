@@ -18,7 +18,7 @@ The Coq formalization can be found in the folder `coq`. Description of each file
 | :------------ | :--------------------------------------------------------------------------------------------- | :----------------  |
 | dunfield.v    | Dunfield's original system and a variant with switches                                         | Section 2,4        |
 | syntax.v      | Types and subtyping of our system (λm)                                                         | Section 3          | 
-| typing.v      | Type safety proofs of λm    | Discussed in section 5.1                                         | Section 3          |
+| typing.v      | Type safety proofs of λm                                                                       | Section 3          |
 | multi_step.v  | Multi-step reduction for Dunfield's system                                                     | Section 4          |
 | equivalence.v | Soundness/completeness proofs of λm to Dunfield's system and two variants of Dunfield's system | Sections 2,3,4     |
 
@@ -47,7 +47,12 @@ switches is at least as expressive as original Dunfield's system.
 
 ## How to run?
 
-### Build From Scratch
+We provide two alternatives for building the artifact:
+
+1. Build from scratch
+2. Docker Image
+
+### 1) Build From Scratch
 
 #### Dependencies
 
@@ -67,7 +72,7 @@ We provide a `Makefile` in `coq` folder. Open a terminal in `coq` folder and
 run `make` command. This command will compile all the Coq files. Reader may look into
 each coq file to verify the claims using their preferred editor.
 
-## Docker Image
+### 2) Docker Image
 
 Alternatively, we also provide a dockerfile in this artifact with all the dependencies
 installed. You may simply build and run the docker image using the provided dockerfile.
