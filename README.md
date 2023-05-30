@@ -40,7 +40,7 @@ Correspondence of important lemmas in paper and in artifact is:
 | Lemma 9          | equivalence.v | dstep_sound_our_system       |
 
 
-Moreover, the lemmas **dt_dt2_complete** and **dstep_dstep2_complete**
+Moreover, the lemmas **dt_dt2_complete** and **dstep_dstep2_complete** (in file equivalence.v)
 are the completeness lemmas for original Dunfield's system to a variant
 with switches. These lemmas state that a variant of Dunfield's system with
 switches is at least as expressive as original Dunfield's system.
