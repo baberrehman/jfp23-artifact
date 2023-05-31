@@ -49,7 +49,7 @@ Fixpoint erase (e:exp) : dexp2 :=
   | (e_var_b i) => de_var_b2 i
   | (e_var_f x) => de_var_f2 x
   | (e_lit i5) => de_lit2 i5
-  | (e_ann e A) => erase e
+  (* | (e_ann e A) => erase e *)
   | (e_abs e A B) => de_abs2 (erase e)
   | (e_app e1 e2) => de_app2 (erase e1) (erase e2)
   | (e_merg e1 e2) => de_merg2 (erase e1) (erase e2)
@@ -66,7 +66,7 @@ Fixpoint size_exp (e1 : exp) {struct e1} : nat :=
     | e_fix e2 A1 => 1 + (t_size A1) + (size_exp e2)
     | e_app e2 e3 => 1 + (size_exp e2) + (size_exp e3)
     | e_merg e2 e3 => 1 + (size_exp e2) + (size_exp e3)
-    | e_ann e2 A1 => 1 + (size_exp e2) + (t_size A1)
+    (* | e_ann e2 A1 => 1 + (size_exp e2) + (t_size A1) *)
     | e_typeof e A e1 B e2 => 1 + (size_exp e) + (t_size A) + (size_exp e1) + (t_size B) + (size_exp e2)
   end.
 
@@ -81,8 +81,8 @@ Proof.
     induction e; simpl in *; intros; eauto.
     + (*case var n*)
       destruct (n == n0); auto.
-    + (*case anno*)
-      forwards*: IHe. lia.
+    (* + case anno
+      forwards*: IHe. lia. *)
     + (*case abs*)
       forwards*: IHi e t (S n). lia.
       rewrite H0. auto.
@@ -300,8 +300,8 @@ Proof.
       eapply mdstep_trans with (e2:=de_merg2 (de_app2 (erase p1) (erase v)) (de_app2 (erase p2) (erase v))); eauto.
       inverts H0.
       apply* dstep_mergr2.
-  - (*case annov*)
-      forwards*: tred_sound H0.
+  (* - case annov
+      forwards*: tred_sound H0. *)
   - (*case merge 1*)
     induction IHstep; auto.
     eapply mdstep_trans with (e2:=(de_merg2 e3 (erase e2))); eauto.

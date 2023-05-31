@@ -38,7 +38,7 @@ Inductive exp : Set :=  (*expression *)
  | e_var_b  : nat -> exp
  | e_var_f  : var -> exp
  | e_lit    : nat -> exp
- | e_ann    : exp -> typ -> exp
+ (* | e_ann    : exp -> typ -> exp *)
  | e_abs    : exp -> typ -> typ -> exp
  | e_app    : exp -> exp -> exp
  | e_merg   : exp -> exp -> exp
@@ -57,7 +57,7 @@ Fixpoint open_exp_wrt_exp_rec (k:nat) (e_5:exp) (e__6:exp) {struct e__6}: exp :=
   | (e_var_b nat) => if (k == nat) then e_5 else (e_var_b nat)
   | (e_var_f x) => e_var_f x
   | (e_lit i5) => e_lit i5
-  | (e_ann e A) => e_ann (open_exp_wrt_exp_rec k e_5 e) A
+  (* | (e_ann e A) => e_ann (open_exp_wrt_exp_rec k e_5 e) A *)
   | (e_abs e A B) => e_abs (open_exp_wrt_exp_rec (S k) e_5 e) A B
   | (e_app e1 e2) => e_app (open_exp_wrt_exp_rec k e_5 e1) (open_exp_wrt_exp_rec k e_5 e2)
   | (e_merg e1 e2) => e_merg (open_exp_wrt_exp_rec k e_5 e1) (open_exp_wrt_exp_rec k e_5 e2)
@@ -81,9 +81,9 @@ Inductive lc_exp : exp -> Prop :=    (* defn lc_exp *)
      (lc_exp (e_var_f x))
  | lc_e_lit : forall i5,
      (lc_exp (e_lit i5))
- | lc_e_ann : forall (e:exp) (A:typ),
+ (* | lc_e_ann : forall (e:exp) (A:typ),
      (lc_exp e) ->
-     (lc_exp (e_ann e A))
+     (lc_exp (e_ann e A)) *)
  | lc_e_abs : forall (L:vars) (e:exp) A B,
       ( forall x , x \notin  L  -> lc_exp  ( open_exp_wrt_exp e (e_var_f x) )  )  ->
      (lc_exp (e_abs e A B))
@@ -115,7 +115,7 @@ Fixpoint fv_exp (e_5:exp) : vars :=
   | (e_var_b nat) => {}
   | (e_var_f x) => {{x}}
   | (e_lit i5) => {}
-  | (e_ann e A) => (fv_exp e)
+  (* | (e_ann e A) => (fv_exp e) *)
   | (e_abs e A B) => (fv_exp e)
   | (e_app e1 e2) => (fv_exp e1) \u (fv_exp e2)
   | (e_merg e1 e2) => (fv_exp e1) \u (fv_exp e2)
@@ -130,7 +130,7 @@ Fixpoint subst_exp (e_5:exp) (x5:var) (e__6:exp) {struct e__6} : exp :=
   | (e_var_b nat) => e_var_b nat
   | (e_var_f x) => (if x == x5 then e_5 else (e_var_f x))
   | (e_lit i5) => e_lit i5
-  | (e_ann e A) => e_ann (subst_exp e_5 x5 e) A
+  (* | (e_ann e A) => e_ann (subst_exp e_5 x5 e) A *)
   | (e_abs e A B) => e_abs (subst_exp e_5 x5 e) A B
   | (e_app e1 e2) => e_app (subst_exp e_5 x5 e1) (subst_exp e_5 x5 e2)
   | (e_merg e1 e2) => e_merg (subst_exp e_5 x5 e1) (subst_exp e_5 x5 e2)
@@ -304,19 +304,19 @@ Inductive step : exp -> exp -> Prop :=    (* defn step *)
      lc_exp (e_abs e A1 B1) ->
      value p ->
      tred p A1 p' ->
-     e_app (e_abs e A1 B1) p ~~> e_ann (open_exp_wrt_exp e p') B1
+     e_app (e_abs e A1 B1) p ~~> (open_exp_wrt_exp e p')
  | step_betam : forall (v p1 p2 e':exp),
      value v ->
      value (e_merg p1 p2) ->
      dynSemantics (e_app (e_merg p1 p2) v) e' ->
      e_app (e_merg p1 p2) v ~~> e'
- | step_ann : forall (e:exp) (A:typ) (e':exp),
+ (* | step_ann : forall (e:exp) (A:typ) (e':exp),
      step e e' ->
-     step (e_ann e A) (e_ann e' A)
- | step_annov : forall p p' A,
+     step (e_ann e A) (e_ann e' A) *)
+ (* | step_annov : forall p p' A,
      value p ->
      tred p A p' ->
-     step (e_ann p A) p'
+     step (e_ann p A) p' *)
  | step_mergl : forall (e1 e2 e1':exp),
      lc_exp e2 ->
      step e1 e1' ->
@@ -362,9 +362,9 @@ Inductive typing : ctx -> exp -> typ -> Prop :=    (* defn typing *)
       uniq  G  ->
       binds  x A G  ->
      typing G (e_var_f x) A
- | typ_ann : forall (G:ctx) (e:exp) (A:typ),
+ (* | typ_ann : forall (G:ctx) (e:exp) (A:typ),
      typing G e A ->
-     typing G (e_ann e A) A
+     typing G (e_ann e A) A *)
  | typ_app : forall (G:ctx) (e1 e2:exp) (B A:typ),
      typing G e1 (t_arrow A B) ->
      typing G e2 A ->
@@ -548,7 +548,7 @@ Proof.
   introv Typ. gen F. inductions Typ; introv Ok.
   - apply* typ_lit.
   - apply* typ_var.
-  - apply* typ_ann.
+  (* - apply* typ_ann. *)
   - apply* typ_app.
   - apply* typ_sub.
   - pick fresh x and apply typ_abs.
@@ -587,8 +587,8 @@ inductions TypT; introv; simpl.
     apply M; auto.
     apply uniq_remove_mid in H; auto.
   + apply* typ_var.
- - (*case anno*)
-  forwards* : IHTypT.
+ (* - case anno
+  forwards* : IHTypT. *)
  - (*case app*)
   eapply typ_app; eauto.
  - (*case sub*)
@@ -765,7 +765,7 @@ Proof.
 Qed.
 
 
-Lemma inv_anno : forall G e A B,
+(* Lemma inv_anno : forall G e A B,
   typing G (e_ann e A) B ->
   typing G e A /\ A <: B.
 Proof.
@@ -775,7 +775,7 @@ Proof.
   destruct H0.
   split*.
   eapply sub_transitivity; eauto.
-Qed.
+Qed. *)
 
 
 Lemma inv_merge : forall G e1 e2 A,
@@ -1103,9 +1103,9 @@ Lemma preservation : forall e e' T,
 Proof.
   introv Typ. gen e'.
   inductions Typ; introv Red; try solve [ inverts* Red ].
-  - (* anno *)
+  (* - anno
     inverts* Red.
-    forwards*: tred_preservation H3.
+    forwards*: tred_preservation H3. *)
   - (* app *)
      inverts* Red.
      (* beta *)
@@ -1403,14 +1403,14 @@ inductions Typ; eauto.
  (*case var*)
  - inverts H0.
  (*case anno*)
- - forwards*: IHTyp. destruct~ H.
+ (* - forwards*: IHTyp. destruct~ H.
   + (*case step-annv*)
     apply tred_progress in Typ; eauto.
     destruct Typ as [v' Typ]. 
     right. exists* v'.
   + (*case step-ann*)
     destruct H as [v' H].
-    forwards*: typing_regular Typ'.
+    forwards*: typing_regular Typ'. *)
 (*case typ-app*)
  - right. forwards* TEMP1: IHTyp1.
    destruct TEMP1.
