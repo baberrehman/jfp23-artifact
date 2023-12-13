@@ -782,11 +782,12 @@ Lemma inv_abs_union : forall G e D1 D2 A A1 A2,
     typing G (e_abs e D1 D2) A1 \/ typing G (e_abs e D1 D2) A2.
 Proof.
   introv Typ Sub.
-  inductions Typ; eauto.
-  - eapply sub_transitivity in Sub; eauto.
-  - inverts* Sub.
-  - admit.
-Admitted.
+  forwards*: inv_abs_sub'' Typ.
+  destruct H as [TEMP1 TEMP2].
+  eapply sub_transitivity in Sub; eauto.
+  clear TEMP2.
+  inverts* Sub.
+Qed.
 
 
 (* Lemma inv_anno : forall G e A B,
@@ -818,8 +819,14 @@ Proof.
     forwards* [B3 [B4 [Typ21 [Typ22 Sub2]]]]: IHTyp2.
     exists (t_and B1 B3) (t_and B2 B4).
     split*. split*.
+    assert (t_and (t_and B1 B2) (t_and B3 B4) <: (t_and A B)).
+    eauto.
+    assert (t_and (t_and B1 B3) (t_and B2 B4) <: t_and (t_and B1 B2) (t_and B3 B4)).
     apply s_anda.
-Admitted.
+    apply* s_anda.
+    apply* s_anda.
+    eapply sub_transitivity; eauto.
+Qed.
 
 Lemma check_or_typ : forall E e A B,
    value e ->
